@@ -1,5 +1,7 @@
+
 #include "ElemofMatrix.h"
 
+using namespace NameElemOfMatrix;
 
 ElemOfMatrix::ElemOfMatrix(string str, int posX, int posY) :m_str(str), m_posX(posX), m_posY(posY), m_value(0) {}
 

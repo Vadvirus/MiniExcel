@@ -1,5 +1,8 @@
+
 #include "Matrix.h"
 
+using namespace NameMatrix;
+using namespace NameElemOfMatrix;
 
 Matrix::Matrix(int rows, int columns)
 {
