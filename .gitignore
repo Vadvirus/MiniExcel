@@ -1,0 +1,13 @@
+*.tlog
+*.lastcodeanalysissucceeded
+*.exp
+*.aps
+*.rc
+*.vcxproj
+*.filters
+*.user
+*.pch
+*.autopkg
+*.xml
+*.targets
+*.pump
