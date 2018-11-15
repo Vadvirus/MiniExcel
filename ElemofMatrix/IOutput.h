@@ -6,8 +6,7 @@
 class IOutput
 {
 public:
-	IOutput();
-	~IOutput();
+	~IOutput()=default;
 	virtual void ThisMatrix(std::vector <std::vector <NameElemOfMatrix::ElemOfMatrix> > v) = 0;
 };
 

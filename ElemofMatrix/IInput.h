@@ -3,8 +3,7 @@
 class IInput
 {
 public:
-	IInput();
-	~IInput();
+	~IInput()=default;
 	virtual std::string Get() = 0;
 };
 
