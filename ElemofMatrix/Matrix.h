@@ -1,38 +1,37 @@
 #pragma once
 
 #include "ElemofMatrix.h"
+
 namespace NameMatrix
 {
-	using namespace std;
 	class Matrix
 	{
 	public:
 		Matrix(int rows, int columns);
 		~Matrix();
 
-		std::vector <vector < NameElemOfMatrix::ElemOfMatrix> > GetM();
+		std::vector <std::vector < NameElemOfMatrix::ElemOfMatrix> > GetMatrix();
+		bool GetIsText(int i, int j);
+		const bool PointerIsInf(int first, int second);
+		const bool IsFile(const std::string filename);
 
-		const bool PointerIsInf(int First, int Second);
-		const bool IsFile(const string filename);
+		void Calculation(int x, int y);
+		void CheckPointer(int first, int second, int x);
 
-		void Calc(int x, int y);
-		void CheckPointer(int First, int Second, int x);
+		void Read(const std::string filename = ".NoFile");
+		void Write(const std::string filename = ".NoFile");
 
-		void Input(istream &stream);
-		void Output(ostream &stream);
+		template <typename T> void ResizeVec(std::vector <std::vector <T> > &vec, const unsigned short rows, const unsigned short columns);
+
 
 	private:
+		std::vector <std::vector <bool> > m_flag;
+		std::vector <std::vector <bool> > m_clearOfFlags;
+		std::vector <std::pair <int, int> > m_errors;
 
-		vector <vector <bool> > flag;
-		vector <vector <bool> > clearOfFlags;
-		vector <pair <int, int> > errors;
+		std::vector <std::vector < NameElemOfMatrix::ElemOfMatrix> >  m_matrix;
 
-		vector <vector < NameElemOfMatrix::ElemOfMatrix> >  M;
-
-
-		template <typename T> void resizeVec(vector <vector <T> > &vec, const unsigned short ROWS, const unsigned short COLUMNS);
-
-		void ResizeAll(int rows, int columns);
+		
 	};
 
 }

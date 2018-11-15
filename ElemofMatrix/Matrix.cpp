@@ -1,26 +1,35 @@
-
 #include "Matrix.h"
+#include "InputConsole.h"
+#include "InputFile.h"
+#include "OutputConsole.h"
+#include "OutputFile.h"
 
+using namespace std;
 using namespace NameMatrix;
 using namespace NameElemOfMatrix;
 
 Matrix::Matrix(int rows, int columns)
 {
-	std::vector <std::vector <ElemOfMatrix> >  M(rows+1, vector <ElemOfMatrix> (columns+1));
+	std::vector <std::vector <ElemOfMatrix> >  M(rows + 1, vector <ElemOfMatrix>(columns + 1));
 }
 
 Matrix::~Matrix()
 {
 }
 
-vector<vector<ElemOfMatrix>> Matrix::GetM()
+vector<vector<ElemOfMatrix>> Matrix::GetMatrix()
 {
-	return M;
+	return m_matrix;
 }
 
-void Matrix::CheckPointer(int First, int Second, int x)
+bool NameMatrix::Matrix::GetIsText(int i, int j)
 {
-	if (M.size() <= First || M[First].size() <= Second || First <= 0 || Second <= 0)
+	return m_matrix[i][j].GetIsText();
+}
+
+void Matrix::CheckPointer(int first, int second, int x)
+{
+	if (m_matrix.size() <= first || m_matrix[first].size() <= second || first <= 0 || second <= 0)
 	{
 		char ch = char() + 'A' - 1;
 		string textEx = "Pointer to non-existent link in element: ";
@@ -30,16 +39,17 @@ void Matrix::CheckPointer(int First, int Second, int x)
 	}
 }
 
-const bool Matrix::PointerIsInf(int First, int Second)
-{
-	char ch = 'A' + errors[0].second - 1;
-	string message = "Reference is inf in element: ";
-	message += ch + to_string(errors[0].first);
 
-	if (flag[First][Second] || M[First][Second].GetIsText()) {
-		for (int i = 0; i < errors.size(); i++) {
-			M[errors[i].first][errors[i].second].SetStr("'Error");
-			M[errors[i].first][errors[i].second].SetIsText(true);
+const bool Matrix::PointerIsInf(int first, int second)
+{
+	char ch = 'A' + m_errors[0].second - 1;
+	string message = "Reference is inf in element: ";
+	message += ch + to_string(m_errors[0].first);
+
+	if (m_flag[first][second] || m_matrix[first][second].GetIsText()) {
+		for (int i = 0; i < m_errors.size(); i++) {
+			m_matrix[m_errors[i].first][m_errors[i].second].SetStr("'Error");
+			m_matrix[m_errors[i].first][m_errors[i].second].SetIsText(true);
 		}
 		throw MyException(message.c_str());
 	}
@@ -48,12 +58,12 @@ const bool Matrix::PointerIsInf(int First, int Second)
 
 }
 
-template <typename T> void Matrix::resizeVec (vector <vector<T> > &vec, const unsigned short ROWS, const unsigned short COLUMNS)
+template <typename T> void Matrix::ResizeVec(vector <vector<T> > &vec, const unsigned short rows, const unsigned short columns)
 {
-	vec.resize(ROWS);
+	vec.resize(rows);
 	for (auto it = vec.begin(); it != vec.end(); it++)
 	{
-		it->resize(COLUMNS);
+		it->resize(columns);
 	}
 }
 
@@ -63,47 +73,48 @@ const bool Matrix::IsFile(const std::string filename)
 	return false;
 }
 
-void Matrix::Input(std::istream & stream)
+void Matrix::Read(const std::string filename)
 {
-	int rows, columns;
-	string s;
-	try
-	{
-		stream >> rows >> columns;
-
-		ResizeAll(rows + 1, columns + 1);
-		resizeVec(M, rows + 1, columns + 1);
-		for (int i = 1; i <= rows; i++)
-			for (int j = 1; j <= columns; j++)
-			{
-				stream >> s;
-				M[i][j] = ElemOfMatrix(s, i, j);
-				if (s[0] == 39) M[i][j].SetIsText(true); else
-					M[i][j].SetIsText(false);
-			}
-	}
-	catch (MyException& MyE)
-	{
-		std::cout << MyE.what() << std::endl;
-	}
-}
-
-
-void Matrix::Output(std::ostream &stream)
-{
+	bool file;
+	if (filename == ".NoFile")  file = false; else true;
 
 	try
 	{
-		std::cout << std::endl;
-		for (int i = 1; i < M.size(); i++)
+		int i = 1;
+		int j = 1;
+		string s = "string";
+		int maxJ=-1;
+		m_matrix.push_back(vector <ElemOfMatrix>(1));
+		m_matrix.push_back(vector <ElemOfMatrix>(1));
+
+		InputFile IF;
+		IF.fileName = filename;
+		InputConsole IC;
+		bool finish = false;
+		while (!finish)
 		{
-			if (i != 1) std::cout << std::endl;
-			for (int j = 1; j < M[i].size(); j++)
-				if (M[i][j].GetIsText())
-					std::cout << M[i][j].RemakeStrForOut() << "\t";
-				else std::cout << M[i][j].GetValue() << "\t";
+			s = (file ? IF.Get(): IC.Get());
+			if (s[s.size() - 1] == '@') 
+			{
+				s.erase(s.size() - 1, 1); 
+				finish = true;
+			}
+			m_matrix[i].push_back(ElemOfMatrix(s, i, j));
+			if (s[0] == 39) m_matrix[i][j].SetIsText(true); else
+				m_matrix[i][j].SetIsText(false);
+			if (s[s.size() - 1] == ',')
+				j++;
+			else
+			{
+				i++;
+				j = 1;
+				m_matrix.push_back(vector <ElemOfMatrix>(1));
+			}
+			if (maxJ < j) maxJ = j;
 		}
-		std::cout << std::endl;
+		
+		ResizeVec(m_flag, i + 1, maxJ + 1);
+		ResizeVec(m_clearOfFlags, i + 1, maxJ + 1);
 	}
 	catch (MyException& MyE)
 	{
@@ -112,61 +123,66 @@ void Matrix::Output(std::ostream &stream)
 
 }
 
-void Matrix::ResizeAll(int rows, int columns)
+void Matrix::Write(const std::string filename)
 {
-	resizeVec(M, rows, columns);
-	resizeVec(flag, rows, columns);
-	resizeVec(clearOfFlags, rows, columns);
+	bool file;
+	if (filename == ".NoFile") file = false; else true;
+	OutputConsole OC;
+	OutputFile OF;
+	OF.fileName = filename;
+	file? OF.ThisMatrix(m_matrix) : OC.ThisMatrix(m_matrix);
+
 }
 
-void Matrix::Calc(int x, int y)
+void Matrix::Calculation(int x, int y)
 {
 	try
 	{
-		string t;
-		string str = M[x][y].GetStr();
-		char op = '0';
-		int First, Second;
+		string temp;
+		string currentExpression = m_matrix[x][y].GetStr();
+		char currentOperator = '0';
+		int first;
+		int second;
 		int negative = 1;
-		for (int position = 0; position < M[x][y].GetStr().size(); position++)
+		for (int position = 0; position < m_matrix[x][y].GetStr().size(); position++)
 		{
-			if (M[x][y].GetStr()[position] == '(' || M[x][y].GetStr()[position] == ')') M[x][y].SetStr(str.erase(position, 1));
+			if (m_matrix[x][y].GetStr()[position] == '(' || m_matrix[x][y].GetStr()[position] == ')') m_matrix[x][y].SetStr(currentExpression.erase(position, 1));
 
-			if (M[x][y].GetStr()[position] >= 'A' && M[x][y].GetStr()[position] <= 'Z')
+			if (m_matrix[x][y].GetStr()[position] >= 'A' && m_matrix[x][y].GetStr()[position] <= 'Z')
 			{
-				flag[x][y] = true;
-				errors.push_back(make_pair(x, y));
+				m_flag[x][y] = true;
+				m_errors.push_back(make_pair(x, y));
 
-				First = M[x][y].GetFirst(position);
-				Second = M[x][y].GetStr()[position] - 'A' + 1;
-				
-				CheckPointer(First, Second, x);
-				if (!PointerIsInf(First, Second))
-					Calc(First,Second);
-				
-				if (M[First][Second].GetIsText()) break;
-				M[x][y].Remake(position, M[First][Second].GetValue());
-				
-				flag = clearOfFlags;
-				errors.clear();
+				first = m_matrix[x][y].GetFirst(position);
+				second = m_matrix[x][y].GetStr()[position] - 'A' + 1;
 
+				CheckPointer(first, second, x);
+				if (!PointerIsInf(first, second))
+					Calculation(first, second);
+
+				if (m_matrix[first][second].GetIsText()) break;
+				m_matrix[x][y].Remake(position, m_matrix[first][second].GetValue());
+
+				m_flag = m_clearOfFlags;
+				m_errors.clear();
 			}
 
-			if (M[x][y].isNumb(M[x][y].GetStr()[position]))
+			if (m_matrix[x][y].isNumb(m_matrix[x][y].GetStr()[position]))
 			{
-				t += M[x][y].GetStr()[position];
-			}
-			
-			if ((!M[x][y].isNumb(M[x][y].GetStr()[position]) && t != "") || M[x][y].GetStr().size() - 1 == position)
-			{
-				if (M[x][y].GetValue() == 0) M[x][y].SetValue (stoi(t)*negative);
-				else M[x][y].SetValue (M[x][y].CalcWithOperator(op, M[x][y].GetValue(), stoi(t)*negative));
-				t = "";
+				temp += m_matrix[x][y].GetStr()[position];
 			}
 
-			if (M[x][y].IsOperator(position)) {
-				op = M[x][y].CheckOperator(position);
-				if (M[x][y].GetStr()[position] == '-') negative = -1; else negative = 1;
+			if ((!m_matrix[x][y].isNumb(m_matrix[x][y].GetStr()[position]) && temp != "") || m_matrix[x][y].GetStr().size() - 1 == position)
+			{
+				if (m_matrix[x][y].GetValue() == 0) m_matrix[x][y].SetValue(stoi(temp)*negative);
+				else m_matrix[x][y].SetValue(m_matrix[x][y].CalcWithOperator(currentOperator, m_matrix[x][y].GetValue(), stoi(temp)*negative));
+				temp = "";
+			}
+
+			if (m_matrix[x][y].IsOperator(position))
+			{
+				currentOperator = m_matrix[x][y].CheckOperator(position);
+				if (m_matrix[x][y].GetStr()[position] == '-') negative = -1; else negative = 1;
 			}
 		}
 

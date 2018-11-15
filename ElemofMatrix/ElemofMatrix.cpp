@@ -1,9 +1,9 @@
-
 #include "ElemofMatrix.h"
 
+using namespace std;
 using namespace NameElemOfMatrix;
 
-ElemOfMatrix::ElemOfMatrix(string str, int posX, int posY) :m_str(str), m_posX(posX), m_posY(posY), m_value(0) {}
+ElemOfMatrix::ElemOfMatrix(string str, int posX, int posY) : m_str(str), m_posX(posX), m_posY(posY), m_value(0) {}
 
 ElemOfMatrix::ElemOfMatrix()
 {
@@ -13,34 +13,34 @@ ElemOfMatrix::~ElemOfMatrix()
 {
 }
 
-const int ElemOfMatrix::GetValue()
+const int ElemOfMatrix::GetValue() const
 {
 	return m_value;
 }
 
-const string ElemOfMatrix::GetStr()
+const string ElemOfMatrix::GetStr() const
 {
 	return m_str;
 }
 
-const void ElemOfMatrix::SetStr(const string s)
+void ElemOfMatrix::SetStr(const string& value)
 {
-	m_str=s;
+	m_str = value;
 }
 
-const void ElemOfMatrix::SetValue(const int value)
+void ElemOfMatrix::SetValue(const int value)
 {
 	m_value = value;
 }
 
-const void ElemOfMatrix::SetIsText(const bool b)
+void ElemOfMatrix::SetIsText(const bool value)
 {
-	text = b;
+	m_isText = value;
 }
 
-const bool ElemOfMatrix::GetIsText()
+const bool ElemOfMatrix::GetIsText() const
 {
-	return text;
+	return m_isText;
 }
 
 const string ElemOfMatrix::RemakeStrForOut()
