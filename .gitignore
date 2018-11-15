@@ -3,7 +3,6 @@
 *.exp
 *.aps
 *.rc
-*.vcxproj
 *.filters
 *.user
 *.pch
