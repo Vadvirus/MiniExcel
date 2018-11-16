@@ -5,7 +5,7 @@
 
 #include "MyException.h"
 
-namespace NameElemOfMatrix
+namespace Matrix
 {
 	class ElemOfMatrix
 	{

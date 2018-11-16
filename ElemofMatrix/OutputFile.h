@@ -1,12 +1,16 @@
 #pragma once
-#include "IOutput.h"
-class OutputFile :
-	public IOutput
-{
-public:
-	OutputFile();
-	~OutputFile();
-	void ThisMatrix(std::vector <std::vector <NameElemOfMatrix::ElemOfMatrix> > v);
-	std::string fileName;
-};
 
+#include "IOutput.h"
+
+namespace Matrix
+{
+	class OutputFile : public IOutput
+	{
+	public:
+		OutputFile();
+		~OutputFile();
+
+		void ThisMatrix(std::vector <std::vector <ElemOfMatrix> > matrix);
+		std::string fileName;
+	};
+}

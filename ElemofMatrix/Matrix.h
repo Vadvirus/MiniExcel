@@ -1,8 +1,9 @@
 #pragma once
 
-#include "ElemofMatrix.h"
+#include <vector>
 
-namespace NameMatrix
+#include "ElemofMatrix.h"
+namespace Matrix
 {
 	class Matrix
 	{
@@ -10,7 +11,7 @@ namespace NameMatrix
 		Matrix(int rows, int columns);
 		~Matrix();
 
-		std::vector <std::vector < NameElemOfMatrix::ElemOfMatrix> > GetMatrix();
+		std::vector <std::vector < ElemOfMatrix> > GetMatrix();
 		bool GetIsText(int i, int j);
 		const bool PointerIsInf(int first, int second);
 		const bool IsFile(const std::string filename);
@@ -29,7 +30,7 @@ namespace NameMatrix
 		std::vector <std::vector <bool> > m_clearOfFlags;
 		std::vector <std::pair <int, int> > m_errors;
 
-		std::vector <std::vector < NameElemOfMatrix::ElemOfMatrix> >  m_matrix;
+		std::vector <std::vector < ElemOfMatrix> >  m_matrix;
 
 		
 	};

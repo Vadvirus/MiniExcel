@@ -7,25 +7,27 @@
 
 
 using namespace std;
-
-InputConsole::InputConsole()
+namespace Matrix
 {
-}
-
-InputConsole::~InputConsole()
-{
-}
-
-string InputConsole::Get()
-{
-	string s;
-	try
+	InputConsole::InputConsole()
 	{
-		std::cin >> s;
-		return s;
 	}
-	catch (MyException& MyE)
+
+	InputConsole::~InputConsole()
 	{
-		std::cout << MyE.what() << std::endl;
+	}
+
+	string InputConsole::Get()
+	{
+		string s;
+		try
+		{
+			std::cin >> s;
+			return s;
+		}
+		catch (MyException& MyE)
+		{
+			std::cout << MyE.what() << std::endl;
+		}
 	}
 }
