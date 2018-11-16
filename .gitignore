@@ -3,7 +3,6 @@
 *.exp
 *.aps
 *.rc
-*.filters
 *.user
 *.pch
 *.autopkg
