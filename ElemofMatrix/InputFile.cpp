@@ -5,6 +5,12 @@ using namespace std;
 
 namespace Matrix
 {
+
+	InputFile::InputFile(std::string filename):fileName(filename)
+	{
+
+	}
+
 	InputFile::InputFile()
 	{
 
@@ -14,7 +20,7 @@ namespace Matrix
 	{
 	}
 
-	string InputFile::Get()
+	const string InputFile::Get()
 	{
 		ifstream fin(fileName);
 		string s;

@@ -8,6 +8,6 @@ namespace Matrix
 	public:
 		virtual ~IInput() = default;
 
-		virtual std::string Get() = 0;
+		virtual const std::string Get() = 0;
 	};
 }

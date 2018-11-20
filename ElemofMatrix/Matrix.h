@@ -1,7 +1,8 @@
 #pragma once
 
 #include <vector>
-
+#include "IInput.h"
+#include "IOutput.h"
 #include "ElemofMatrix.h"
 namespace Matrix
 {
@@ -17,10 +18,11 @@ namespace Matrix
 		const bool IsFile(const std::string filename);
 
 		void Calculation(int x, int y);
+		void CalcForAll();
 		void CheckPointer(int first, int second, int x);
 
-		void Read(const std::string filename = ".NoFile");
-		void Write(const std::string filename = ".NoFile");
+		void Read(IInput& input);
+		void Write(IOutput& output);
 
 		template <typename T> void ResizeVec(std::vector <std::vector <T> > &vec, const unsigned short rows, const unsigned short columns);
 

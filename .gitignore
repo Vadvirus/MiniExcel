@@ -9,3 +9,16 @@
 *.xml
 *.targets
 *.pump
+*.pdb
+*.db
+.vs/OOP_test/v15/.suo
+*.ipch
+*.db-shm
+*.db-wal
+*.log
+*.res
+*.obj
+*.idb
+*.lib
+*.ilk
+*.exe

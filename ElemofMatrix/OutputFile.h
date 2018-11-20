@@ -7,6 +7,7 @@ namespace Matrix
 	class OutputFile : public IOutput
 	{
 	public:
+		OutputFile(std::string filename);
 		OutputFile();
 		~OutputFile();
 

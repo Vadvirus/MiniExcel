@@ -1,6 +1,5 @@
 #include "Matrix.h"
-#include "InputConsole.h"
-#include "InputFile.h"
+#include "IInput.h"
 #include "OutputConsole.h"
 #include "OutputFile.h"
 
@@ -38,7 +37,6 @@ namespace Matrix
 		}
 	}
 
-
 	const bool Matrix::PointerIsInf(int first, int second)
 	{
 		char ch = 'A' + m_errors[0].second - 1;
@@ -72,11 +70,8 @@ namespace Matrix
 		return false;
 	}
 
-	void Matrix::Read(const string filename)
+	void Matrix::Read(IInput& input)
 	{
-		bool file;
-		if (filename == ".NoFile")  file = false; else true;
-
 		try
 		{
 			int i = 1;
@@ -86,51 +81,42 @@ namespace Matrix
 			m_matrix.push_back(vector <ElemOfMatrix>(1));
 			m_matrix.push_back(vector <ElemOfMatrix>(1));
 
-			InputFile IF;
-			IF.fileName = filename;
-			InputConsole IC;
+
 			bool finish = false;
 			while (!finish)
 			{
-				s = (file ? IF.Get() : IC.Get());
-				if (s[s.size() - 1] == '@')
+				s = input.Get();
+				if (!s.empty())
 				{
-					s.erase(s.size() - 1, 1);
-					finish = true;
-				}
-				m_matrix[i].push_back(ElemOfMatrix(s, i, j));
-				if (s[0] == 39) m_matrix[i][j].SetIsText(true); else
-					m_matrix[i][j].SetIsText(false);
-				if (s[s.size() - 1] == ',')
-					j++;
-				else
-				{
-					i++;
-					j = 1;
-					m_matrix.push_back(vector <ElemOfMatrix>(1));
-				}
-				if (maxJ < j) maxJ = j;
-			}
+					m_matrix[i].push_back(ElemOfMatrix(s, i, j));
+					if (s[0] == 39) m_matrix[i][j].SetIsText(true); else
+						m_matrix[i][j].SetIsText(false);
+					if (s[s.size() - 1] == ',')
+						j++;
+					else
+					{
+						i++;
+						j = 1;
+						m_matrix.push_back(vector <ElemOfMatrix>(1));
+					}
+					if (maxJ < j) maxJ = j;
 
-			ResizeVec(m_flag, i + 1, maxJ + 1);
-			ResizeVec(m_clearOfFlags, i + 1, maxJ + 1);
+					ResizeVec(m_flag, i + 1, maxJ + 1);
+					ResizeVec(m_clearOfFlags, i + 1, maxJ + 1);
+
+				}
+				else finish = true;
+			}
 		}
 		catch (MyException& MyE)
 		{
 			std::cout << MyE.what() << std::endl;
 		}
-
 	}
 
-	void Matrix::Write(const std::string filename)
+	void Matrix::Write(IOutput& output)
 	{
-		bool file;
-		if (filename == ".NoFile") file = false; else true;
-		OutputConsole OC;
-		OutputFile OF;
-		OF.fileName = filename;
-		file ? OF.ThisMatrix(m_matrix) : OC.ThisMatrix(m_matrix);
-
+		output.ThisMatrix(m_matrix);
 	}
 
 	void Matrix::Calculation(int x, int y)
@@ -190,5 +176,12 @@ namespace Matrix
 		{
 			cout << MyE.what() << endl;
 		}
+	}
+
+	void Matrix::CalcForAll()
+	{
+		for (int i = 1; i < m_matrix.size(); i++)
+			for (int j = 1; j < m_matrix[i].size(); j++)
+				if (!GetIsText(i, j)) Calculation(i, j);
 	}
 }

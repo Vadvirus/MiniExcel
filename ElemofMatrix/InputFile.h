@@ -8,9 +8,10 @@ namespace Matrix {
 	class InputFile : public IInput
 	{
 	public:
+		InputFile(std::string filename);
 		InputFile();
 		~InputFile();
-		std::string Get();
+		const std::string Get();
 
 		std::string fileName;
 	};

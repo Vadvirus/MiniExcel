@@ -3,6 +3,9 @@
 
 namespace Matrix
 {
+	OutputFile::OutputFile(std::string filename):fileName(filename)
+	{
+	}
 	OutputFile::OutputFile()
 	{
 	}

@@ -6,10 +6,8 @@ namespace Matrix
 	class InputConsole : public IInput
 	{
 	public:
-		InputConsole();
-		~InputConsole();
-
-		std::string Get();
+	
+		const std::string Get();
 	};
 }
 
